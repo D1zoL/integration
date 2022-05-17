@@ -36,7 +36,6 @@ data:
     [realm_manager]
     data_source = "WSO2_USER_DB"
 
-    {{ if .Values.integration.wso2mi.cluster.enabled }}
     [[datasource]]
     id = "WSO2_COORDINATION_DB"
     url= "jdbc:postgresql://{{ .Values.integration.postgresql.serviceName }}:5432/clusterdb"
@@ -46,7 +45,7 @@ data:
     pool_options.maxActive=50
     pool_options.maxWait = 60000
     pool_options.testOnBorrow = true
-    {{ end }}
+
     {{ end }}
 
     [keystore.primary]

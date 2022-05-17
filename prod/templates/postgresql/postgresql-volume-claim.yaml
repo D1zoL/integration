@@ -1,0 +1,15 @@
+{{ if .Values.integration.dependencies.postgresql }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "postgresql.resource.prefix" . }}-data-volume
+  namespace : {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.integration.postgresql.volume.capacity }}
+  storageClassName: {{ .Values.integration.postgresql.volume.storageClassName }}
+
+{{ end }}

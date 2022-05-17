@@ -1,0 +1,112 @@
+# Default values for integration.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+integration:
+  dependencies:
+    apim: false
+    postgresql: true
+    wso2mi: true
+    dashboard: false
+    monitoring:
+      enabled: false
+      prometheus: false
+      grafana: false
+      elk: false
+  serviceAccount:
+    enabled: true
+    name: integration
+
+  wso2apim:
+    name: "wso2apim"
+
+    hostnames:
+      default: wso2am-oco-prod.apps.prod.ibs.local
+      gateway: gateway.wso2am-oco-prod.apps.prod.ibs.local
+      websub: websub.wso2am-oco-prod.apps.prod.ibs.local
+
+    proxy:
+      enabled: true
+      port: 443
+
+    replicaCount: 1
+
+    image:
+      repository: wso2/wso2am
+      pullPolicy: IfNotPresent
+      tag: "4.1.0"
+
+    imagePullSecrets: []
+    nameOverride: ""
+    podAnnotations: {}
+    podSecurityContext: 
+      runAsUser: 802
+    securityContext: {}
+
+    service:
+      type: ClusterIP
+
+    resources: {}
+
+    jvm:
+      heap:
+        memory:
+          xms: "4096m"
+          xmx: "4096m"
+
+    autoscaling:
+      enabled: false
+      minReplicas: {}
+      maxReplicas: {}
+      targetCPUUtilizationPercentage: {}
+      targetMemoryUtilizationPercentage: {}
+
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+  postgresql:
+    name: "postgresql"
+    serviceName: "postgresql-service"
+    service:
+      type: NodePort
+    image:
+      repository: postgres
+      pullPolicy: IfNotPresent
+      tag: "14.2"
+    volume:
+      enabled: true
+      capacity: 20Gi
+      storageClassName: 
+    podAnnotations: {}
+  
+  wso2mi:
+    name: "wso2mi"
+    hostname: wso2mi-oco-prod.apps.prod.ibs.local
+    serviceName: "wso2mi-service"
+    cluster:
+      enabled: true
+      replicas: 2
+    replicas: 2
+    service:
+      type: ClusterIP
+    image:
+      repository: d1zol/oco
+      pullPolicy: Always
+      tag: "wso2mi-1"
+    podAnnotations: {}
+    podSecurityContext: 
+      runAsUser: 802
+  
+  dashboard:
+    name: "dashboard"
+    hostname:
+    serviceName: "dashboard-service"
+    service:
+      type: ClusterIP
+    image:
+      repository: wso2/wso2mi-dashboard
+      pullPolicy: IfNotPresent
+      tag: "4.1.0"
+    podAnnotations: {}
+    podSecurityContext: 
+      runAsUser: 802

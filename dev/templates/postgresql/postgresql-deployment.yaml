@@ -1,0 +1,61 @@
+{{ if .Values.integration.dependencies.postgresql }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.integration.postgresql.name }}
+  namespace : {{ .Release.Namespace }}
+  labels:
+    {{- include "postgresql.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "postgresql.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.integration.postgresql.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "postgresql.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.integration.postgresql.name }}
+          image: "{{ .Values.integration.postgresql.image.repository }}:{{ .Values.integration.postgresql.image.tag }}"
+          imagePullPolicy: {{ .Values.integration.postgresql.image.pullPolicy }}
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.integration.postgresql.name }}-secrets
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.integration.postgresql.name }}-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.integration.postgresql.name }}-secrets
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: postgresql-init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+            - name: postgresql-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgresql-init-scripts
+          configMap:
+            name: {{ template "postgresql.resource.prefix" . }}-conf
+            defaultMode: 420
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: {{ template "postgresql.resource.prefix" . }}-data-volume
+      {{ if .Values.integration.serviceAccount.enabled }}
+      serviceAccountName: {{ .Values.integration.serviceAccount.name }}
+      {{ end }}
+{{ end }}

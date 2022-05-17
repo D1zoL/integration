@@ -1,0 +1,35 @@
+{{ if .Values.integration.dependencies.dashboard }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.integration.dashboard.name}}
+  namespace : {{ .Release.Namespace }}
+  labels:
+    {{- include "dashboard.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "dashboard.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.integration.dashboard.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "dashboard.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.integration.dashboard.name}}
+          image: "{{ .Values.integration.dashboard.image.repository }}:{{ .Values.integration.dashboard.image.tag }}"
+          imagePullPolicy: {{ .Values.integration.dashboard.image.pullPolicy }}
+          ports:
+            - containerPort: 9743
+              protocol: "TCP"    
+      {{ if .Values.integration.serviceAccount.enabled }}
+      serviceAccountName: {{ .Values.integration.serviceAccount.name }}
+      {{ end }}
+      securityContext:
+        {{- toYaml .Values.integration.wso2mi.podSecurityContext | nindent 8 }}  
+{{ end }}

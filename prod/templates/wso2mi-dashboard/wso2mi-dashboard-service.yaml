@@ -1,0 +1,19 @@
+{{ if .Values.integration.dependencies.dashboard }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.integration.dashboard.serviceName }}
+  namespace : {{ .Release.Namespace }}
+  labels:
+    {{- include "dashboard.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.integration.dashboard.service.type }}
+  ports:
+    # ports that this service should serve on
+    - name: pass-through-https
+      protocol: TCP
+      port: 9743
+      targetPort: 9743
+  selector:
+    {{- include "dashboard.selectorLabels" . | nindent 6 }}
+{{ end }}

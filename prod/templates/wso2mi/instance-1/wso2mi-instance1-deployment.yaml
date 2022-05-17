@@ -9,7 +9,6 @@ metadata:
 spec:
   {{ if .Values.integration.wso2mi.cluster.enabled }}
   replicas: {{ .Values.integration.wso2mi.cluster.replicas }}
-  serviceName: {{ .Values.integration.wso2mi.serviceName }}
   {{ else }}
   replicas: {{ .Values.integration.wso2mi.replicas }}
   {{ end }}  

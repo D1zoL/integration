@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.integration.wso2mi.serviceName }}
+  name: {{ .Values.integration.wso2mi.serviceName }}-1
   namespace : {{ .Release.Namespace }}
   labels:
     {{- include "wso2mi.labels" . | nindent 4 }}

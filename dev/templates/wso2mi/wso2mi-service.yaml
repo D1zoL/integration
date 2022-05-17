@@ -23,5 +23,6 @@ spec:
       port: 9201
       targetPort: 9201
   selector:
-    {{- include "wso2mi.selectorLabels" . | nindent 6 }}
+    deployment: {{ template "wso2mi.resource.prefix" . }}
+    node: {{ template "wso2mi.resource.prefix" . }}
 {{ end }}

@@ -1,25 +1,17 @@
 {{ if .Values.integration.dependencies.wso2mi }}
 apiVersion: apps/v1
-{{ if .Values.integration.wso2mi.cluster.enabled }}
-kind: StatefulSet
-{{ else }}
 kind: Deployment
-{{ end }}
 metadata:
   name: {{ .Values.integration.wso2mi.name}}
   namespace : {{ .Release.Namespace }}
   labels:
     {{- include "wso2mi.labels" . | nindent 4 }}
 spec:
-  {{ if .Values.integration.wso2mi.cluster.enabled }}
-  replicas: {{ .Values.integration.wso2mi.cluster.replicas }}
-  serviceName: {{ .Values.integration.wso2mi.serviceName }}
-  {{ else }}
-  replicas: {{ .Values.integration.wso2mi.replicas }}
-  {{ end }}  
+  replicas: {{ .Values.integration.wso2mi.replicas }} 
   selector:
     matchLabels:
-      {{- include "wso2mi.selectorLabels" . | nindent 6 }}
+      deployment: {{ template "wso2mi.resource.prefix" . }}
+      node: {{ template "wso2mi.resource.prefix" . }}
   template:
     metadata:
       {{- with .Values.integration.wso2mi.podAnnotations }}
@@ -27,7 +19,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "wso2mi.selectorLabels" . | nindent 8 }}
+        deployment: {{ template "wso2mi.resource.prefix" . }}
+        node: {{ template "wso2mi.resource.prefix" . }}
     spec:
       initContainers:
         {{ if .Values.integration.dependencies.postgresql }}

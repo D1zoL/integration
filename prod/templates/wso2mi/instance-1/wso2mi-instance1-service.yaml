@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "wso2mi.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.integration.wso2mi.service.type }}
+  type: {{ .Values.integration.wso2mi.services.type }}
   ports:
     # ports that this service should serve on
     - name: pass-through-https

@@ -81,12 +81,11 @@ integration:
     name: "wso2mi"
     hostname: wso2mi-oco-prod.apps.prod.ibs.local
     serviceName: "wso2mi-service"
-    cluster:
-      enabled: true
-      replicas: 2
-    replicas: 2
-    service:
-      type: LoadBalancer
+    replicas: 1
+    services:
+      main:
+        type: LoadBalancer
+      type: ClusterIP
     image:
       repository: d1zol/oco
       pullPolicy: Always

@@ -1,14 +1,14 @@
 helm install integration integration/ --values integration/values-local.yaml
 
-helm template --dry-run --debug  --output-dir ./debug --namespace my-namespace integration ./integration
+helm template --dry-run --debug  --output-dir ./debug --namespace my-namespace prod ./prod
 
-rm .\integration\integration-1.0.0.tgz
+rm .\prod\prod-1.0.0.tgz
 
-helm package integration
+helm package prod
 
-mv integration-1.0.0.tgz .\integration\
+mv integration-prod-1.0.0.tgz .\prod\
 
-helm repo index integration/ --url https://d1zol.github.io/integration/
+helm repo index prod/ --url https://d1zol.github.io/integration/
 
 curl https://d1zol.github.io/integration/index.yaml
 

@@ -7,11 +7,7 @@ metadata:
   labels:
     {{- include "wso2mi.labels" . | nindent 4 }}
 spec:
-  {{ if .Values.integration.wso2mi.cluster.enabled }}
-  replicas: {{ .Values.integration.wso2mi.cluster.replicas }}
-  {{ else }}
   replicas: {{ .Values.integration.wso2mi.replicas }}
-  {{ end }}  
   selector:
     matchLabels:
       deployment: {{ template "wso2mi.resource.prefix" . }}
@@ -65,7 +61,7 @@ spec:
             - name: JAVA_OPTS
               value: -DenablePrometheusApi=true            
             - name: instance
-              value: "{{ .Values.integration.wso2mi.serviceName}}.{{ .Release.Namespace }}.svc.cluster.local:9201"
+              value: "{{ .Values.integration.wso2mi.serviceName}}-1.{{ .Release.Namespace }}.svc.cluster.local:9201"
             {{ end }}       
           volumeMounts:
             - name: wso2mi-config

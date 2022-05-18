@@ -21,8 +21,8 @@ spec:
       labels:
         {{- include "wso2apim.selectorLabels" . | nindent 8 }}
     spec:
-      initContainers:
       {{ if .Values.integration.dependencies.postgresql }}
+      initContainers:
       - name: init-postgresql
         image: busybox:1.32
         command: ['sh', '-c', 'echo -e "Checking for the availability of PostgreSQL Server deployment"; while ! nc -z "{{ .Values.integration.postgresql.serviceName }}" 5432; do sleep 1; printf "-"; done; echo -e "  >> PostgreSQL Server has started";']
@@ -39,19 +39,9 @@ spec:
           - name: postgresql-connector-jar
             mountPath: /postgresql-connector-jar
       {{ end }}
-      {{- with .Values.integration.wso2apim.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{ if .Values.integration.serviceAccount.enabled }}
-      serviceAccountName: {{ .Values.integration.serviceAccount.name }}
-      {{ end }}
-      securityContext:
-        {{- toYaml .Values.integration.wso2apim.podSecurityContext | nindent 8 }}
+      
       containers:
         - name: {{ .Values.integration.wso2apim.name }}
-          securityContext:
-            {{- toYaml .Values.integration.wso2apim.securityContext | nindent 12 }}
           image: "{{ .Values.integration.wso2apim.image.repository }}:{{ .Values.integration.wso2apim.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.integration.wso2apim.image.pullPolicy }}
           ports:
@@ -99,6 +89,16 @@ spec:
         - name: postgresql-connector-jar
           emptyDir: {}
         {{ end }}
+
+      {{- with .Values.integration.wso2apim.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{ if .Values.integration.serviceAccount.enabled }}
+      serviceAccountName: {{ .Values.integration.serviceAccount.name }}
+      {{ end }}
+      securityContext:
+        {{- toYaml .Values.integration.wso2apim.podSecurityContext | nindent 8 }}
       {{- with .Values.integration.wso2apim.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -11,7 +11,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "wso2apim.selectorLabels" . | nindent 6 }}
+      deployment: {{ template "wso2apim.resource.prefix" . }}
   template:
     metadata:
       {{- with .Values.integration.wso2apim.podAnnotations }}
@@ -19,7 +19,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "wso2apim.selectorLabels" . | nindent 8 }}
+        deployment: {{ template "wso2apim.resource.prefix" . }}
     spec:
       {{ if .Values.integration.dependencies.postgresql }}
       initContainers:
@@ -38,12 +38,13 @@ spec:
         volumeMounts:
           - name: postgresql-connector-jar
             mountPath: /postgresql-connector-jar
-      {{ end }}
-      
+      {{ end }}      
       containers:
         - name: {{ .Values.integration.wso2apim.name }}
           image: "{{ .Values.integration.wso2apim.image.repository }}:{{ .Values.integration.wso2apim.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.integration.wso2apim.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.integration.wso2apim.podSecurityContext | nindent 12 }}
           ports:
             - containerPort: 11111
               protocol: TCP
@@ -67,11 +68,7 @@ spec:
               protocol: TCP
           env:
             - name: JVM_MEM_OPTS
-              value: "-Xms{{ .Values.integration.wso2apim.jvm.heap.memory.xms }} -Xmx{{ .Values.integration.wso2apim.jvm.heap.memory.xmx }}"
-          lifecycle:
-            preStop:
-              exec:
-                command:  ['sh', '-c', '${WSO2_SERVER_HOME}/bin/api-manager.sh stop']
+              value: "-Xms{{ .Values.integration.wso2apim.resources.jvm.heap.memory.xms }} -Xmx{{ .Values.integration.wso2apim.resources.jvm.heap.memory.xmx }}"
           volumeMounts:
             - name: wso2am-deployment-toml
               mountPath: /home/wso2carbon/wso2-config-volume/repository/conf
@@ -80,7 +77,9 @@ spec:
               mountPath: /home/wso2carbon/wso2-artifact-volume/repository/components/dropins
             {{ end }}
           resources:
-            {{- toYaml .Values.integration.wso2apim.resources | nindent 12 }}
+            requests:
+              memory: {{ .Values.integration.wso2apim.resources.requests.memory }}
+              cpu: {{ .Values.integration.wso2apim.resources.requests.cpu }}
       volumes:
         - name: wso2am-deployment-toml
           configMap:
@@ -89,7 +88,6 @@ spec:
         - name: postgresql-connector-jar
           emptyDir: {}
         {{ end }}
-
       {{- with .Values.integration.wso2apim.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -98,17 +96,9 @@ spec:
       serviceAccountName: {{ .Values.integration.serviceAccount.name }}
       {{ end }}
       securityContext:
-        {{- toYaml .Values.integration.wso2apim.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.integration.wso2apim.securityContext | nindent 8 }}
       {{- with .Values.integration.wso2apim.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.integration.wso2apim.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.integration.wso2apim.tolerations }}
-      tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 {{ end }}

@@ -42,7 +42,7 @@ If release name contains chart name it will be used as a full name.
 WSO2AM NAME
 */}}
 {{- define "wso2apim.resource.prefix" -}}
-{{- "wso2am" }}
+{{- "wso2apim" }}
 {{- end -}}
 
 {{/*
@@ -159,7 +159,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 RESOURCE PREFIX
 */}}
 {{- define "dashboard.resource.prefix" -}}
-{{- "wso2mi-dashboard" }}
+{{- "dashboard" }}
 {{- end -}}
 
 {{/*

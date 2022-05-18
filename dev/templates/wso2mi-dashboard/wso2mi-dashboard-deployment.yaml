@@ -10,7 +10,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "dashboard.selectorLabels" . | nindent 6 }}
+      deployment: {{ template "dashboard.resource.prefix" . }}
   template:
     metadata:
       {{- with .Values.integration.dashboard.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "dashboard.selectorLabels" . | nindent 8 }}
+        deployment: {{ template "dashboard.resource.prefix" . }}
     spec:
       containers:
         - name: {{ .Values.integration.dashboard.name}}

@@ -8,6 +8,9 @@ metadata:
     {{- include "wso2mi.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.integration.wso2mi.services.type }}
+  selector:
+    deployment: {{ template "wso2mi.resource.prefix" . }}
+    node: {{ template "wso2mi.resource.prefix" . }}-2
   ports:
     # ports that this service should serve on
     - name: pass-through-https
@@ -22,7 +25,4 @@ spec:
       protocol: TCP
       port: 9201
       targetPort: 9201
-  selector:
-    deployment: {{ template "wso2mi.resource.prefix" . }}
-    node: {{ template "wso2mi.resource.prefix" . }}-2
 {{ end }}

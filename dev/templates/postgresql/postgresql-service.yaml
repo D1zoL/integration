@@ -8,11 +8,12 @@ metadata:
     {{- include "postgresql.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.integration.postgresql.service.type }}
+  selector:
+    deployment: {{ template "postgresql.resource.prefix" . }}
   ports:
     # ports that this service should serve on
     - name: postgresql-port
       protocol: TCP
       port: 5432
-  selector:
-    {{- include "postgresql.selectorLabels" . | nindent 6 }}
+  
 {{ end }}

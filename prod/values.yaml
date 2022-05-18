@@ -43,13 +43,18 @@ integration:
     service:
       type: ClusterIP
 
-    resources: {}
-
-    jvm:
-      heap:
-        memory:
-          xms: "4096m"
-          xmx: "4096m"
+    resources:
+        requests:
+          memory: "2Gi"
+          cpu: "2000m"
+        limits:
+          memory: "3Gi"
+          cpu: "3000m"
+        jvm:
+          heap:
+            memory:
+              xms: "1024m"
+              xmx: "1024m"
 
     autoscaling:
       enabled: false
@@ -59,8 +64,6 @@ integration:
       targetMemoryUtilizationPercentage: {}
 
     nodeSelector: {}
-    tolerations: []
-    affinity: {}
 
   postgresql:
     name: "postgresql"

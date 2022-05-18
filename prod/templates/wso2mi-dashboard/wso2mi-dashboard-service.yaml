@@ -8,12 +8,12 @@ metadata:
     {{- include "dashboard.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.integration.dashboard.service.type }}
+  selector:
+    deployment: {{ template "dashboard.resource.prefix" . }}
   ports:
     # ports that this service should serve on
     - name: pass-through-https
       protocol: TCP
       port: 9743
       targetPort: 9743
-  selector:
-    {{- include "dashboard.selectorLabels" . | nindent 6 }}
 {{ end }}

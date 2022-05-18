@@ -1,20 +1,20 @@
-{{ if .Values.integration.dependencies.wso2mi }}
+{{ if .Values.integration.settings.dependencies.wso2mi }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.integration.wso2mi.name}}
+  name: {{ .Values.integration.apps.wso2mi.name}}
   namespace : {{ .Release.Namespace }}
   labels:
     {{- include "wso2mi.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.integration.wso2mi.replicas }} 
+  replicas: {{ .Values.integration.apps.wso2mi.replicas }} 
   selector:
     matchLabels:
       deployment: {{ template "wso2mi.resource.prefix" . }}
       node: {{ template "wso2mi.resource.prefix" . }}
   template:
     metadata:
-      {{- with .Values.integration.wso2mi.podAnnotations }}
+      {{- with .Values.integration.apps.wso2mi.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -23,10 +23,10 @@ spec:
         node: {{ template "wso2mi.resource.prefix" . }}
     spec:
       initContainers:
-        {{ if .Values.integration.dependencies.postgresql }}
+        {{ if .Values.integration.settings.dependencies.postgresql }}
         - name: init-postgresql
           image: busybox:1.32
-          command: ['sh', '-c', 'echo -e "Checking for the availability of PostgreSQL Server deployment"; while ! nc -z "{{ .Values.integration.postgresql.serviceName }}" 5432; do sleep 1; printf "-"; done; echo -e "  >> PostgreSQL Server has started";']
+          command: ['sh', '-c', 'echo -e "Checking for the availability of PostgreSQL Server deployment"; while ! nc -z "{{ .Values.integration.apps.postgresql.serviceName }}" 5432; do sleep 1; printf "-"; done; echo -e "  >> PostgreSQL Server has started";']
         - name: init-postgresql-connector-download
           image: busybox:1.32
           command:
@@ -40,15 +40,15 @@ spec:
             - name: postgresql-connector-jar
               mountPath: /postgresql-connector-jar
         {{ end }}
-        {{ if .Values.integration.dependencies.dashboard }}
+        {{ if .Values.integration.settings.dependencies.dashboard }}
         - name: init-wso2mi-dashboard
           image: busybox:1.32
-          command: ['sh', '-c', 'echo -e "Checking for the availability of wso2mi-dashboard Server deployment"; while ! nc -z "{{ .Values.integration.dashboard.serviceName }}" 9743; do sleep 1; printf "-"; done; echo -e "  >> wso2mi-dashboard Server has started";']
+          command: ['sh', '-c', 'echo -e "Checking for the availability of wso2mi-dashboard Server deployment"; while ! nc -z "{{ .Values.integration.apps.dashboard.serviceName }}" 9743; do sleep 1; printf "-"; done; echo -e "  >> wso2mi-dashboard Server has started";']
         {{ end }}
       containers:
-        - name: {{ .Values.integration.wso2mi.name}}
-          image: "{{ .Values.integration.wso2mi.image.repository }}:{{ .Values.integration.wso2mi.image.tag }}"
-          imagePullPolicy: {{ .Values.integration.wso2mi.image.pullPolicy }}
+        - name: {{ .Values.integration.apps.wso2mi.name}}
+          image: "{{ .Values.integration.apps.wso2mi.image.repository }}:{{ .Values.integration.apps.wso2mi.image.tag }}"
+          imagePullPolicy: {{ .Values.integration.apps.wso2mi.image.pullPolicy }}
           ports:
             - containerPort: 8290
               protocol: "TCP"
@@ -57,16 +57,16 @@ spec:
             - containerPort: 9201
               protocol: "TCP"
           env:
-            {{ if .Values.integration.dependencies.monitoring.enabled }}
+            {{ if .Values.integration.settings.dependencies.monitoring.enabled }}
             - name: JAVA_OPTS
               value: -DenablePrometheusApi=true            
             - name: instance
-              value: "{{ .Values.integration.wso2mi.serviceName}}.{{ .Release.Namespace }}.svc.cluster.local:9201"
+              value: "{{ .Values.integration.apps.wso2mi.serviceName}}.{{ .Release.Namespace }}.svc.cluster.local:9201"
             {{ end }}       
           volumeMounts:
             - name: wso2mi-config
               mountPath: /home/wso2carbon/wso2-config-volume/conf
-            {{ if .Values.integration.dependencies.postgresql }}
+            {{ if .Values.integration.settings.dependencies.postgresql }}
             - name: postgresql-connector-jar
               mountPath: /home/wso2carbon/wso2-artifact-volume/lib
             {{ end }}
@@ -78,7 +78,7 @@ spec:
           configMap:
             name: {{ template "wso2mi.resource.prefix" . }}-conf
             defaultMode: 420
-        {{ if .Values.integration.dependencies.postgresql }}
+        {{ if .Values.integration.settings.dependencies.postgresql }}
         - name: postgresql-connector-jar
           emptyDir: {}
         {{ end }}
@@ -86,11 +86,11 @@ spec:
           configMap:
             name: {{ template "wso2mi.resource.prefix" . }}-conf-docker-entrypoint
             defaultMode: 263
-      {{ if .Values.integration.serviceAccount.enabled }}
-      serviceAccountName: {{ .Values.integration.serviceAccount.name }}
+      {{ if .Values.integration.settings.serviceAccount.enabled }}
+      serviceAccountName: {{ .Values.integration.settings.serviceAccount.name }}
       {{ end }}
       securityContext:
-        {{- toYaml .Values.integration.wso2mi.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.integration.apps.wso2mi.podSecurityContext | nindent 8 }}
       hostAliases:
         - ip: 172.28.213.133
           hostnames:

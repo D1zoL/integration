@@ -1,4 +1,4 @@
-{{ if .Values.integration.dependencies.apim }}
+{{ if .Values.integration.settings.dependencies.apim }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,7 +7,7 @@ metadata:
 data:
   deployment.toml: |-
     [server]
-    hostname = "{{ .Values.integration.wso2apim.hostnames.default }}"
+    hostname = "{{ .Values.integration.apps.wso2apim.hostnames.default }}"
     #offset=0
     base_path = "${carbon.protocol}://${carbon.host}:${carbon.management.port}"
     #discard_empty_caches = false
@@ -21,12 +21,12 @@ data:
     [user_store]
     type = "database_unique_id"
 
-    {{ if .Values.integration.wso2apim.proxy.enabled }}
+    {{ if .Values.integration.apps.wso2apim.proxy.enabled }}
     [transport.https.properties]
-    proxyPort = {{ .Values.integration.wso2apim.proxy.port }}
+    proxyPort = {{ .Values.integration.apps.wso2apim.proxy.port }}
     {{ end }}
 
-    {{ if not .Values.integration.dependencies.postgresql}}
+    {{ if not .Values.integration.settings.dependencies.postgresql}}
     
     [database.local]
     url = "jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE"
@@ -47,7 +47,7 @@ data:
 
     [database.local]
     type = "postgresql"
-    url = "jdbc:postgresql://{{ .Values.integration.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2CARBON_DB"
+    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2CARBON_DB"
     username = "postgres"
     password = "postgres"
     driver = "org.postgresql.Driver"
@@ -58,7 +58,7 @@ data:
 
     [database.apim_db]
     type = "postgresql"
-    url = "jdbc:postgresql://{{ .Values.integration.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2AM_DB"
+    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2AM_DB"
     username = "postgres"
     password = "postgres"
     driver = "org.postgresql.Driver"
@@ -68,7 +68,7 @@ data:
 
     [database.shared_db]
     type = "postgresql"
-    url = "jdbc:postgresql://{{ .Values.integration.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2SHARED_DB"
+    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2SHARED_DB"
     username = "postgres"
     password = "postgres"
     driver = "org.postgresql.Driver"
@@ -113,10 +113,10 @@ data:
     password= "${admin.password}"
     ws_endpoint = "ws://localhost:9099"
     wss_endpoint = "wss://localhost:8099"
-    http_endpoint = "http://{{ .Values.integration.wso2apim.hostnames.gateway}}"
-    https_endpoint = "https://{{ .Values.integration.wso2apim.hostnames.gateway}}"
-    websub_event_receiver_http_endpoint = "http://{{ .Values.integration.wso2apim.hostnames.websub}}"
-    websub_event_receiver_https_endpoint = "https://{{ .Values.integration.wso2apim.hostnames.websub}}"
+    http_endpoint = "http://{{ .Values.integration.apps.wso2apim.hostnames.gateway}}"
+    https_endpoint = "https://{{ .Values.integration.apps.wso2apim.hostnames.gateway}}"
+    websub_event_receiver_http_endpoint = "http://{{ .Values.integration.apps.wso2apim.hostnames.websub}}"
+    websub_event_receiver_https_endpoint = "https://{{ .Values.integration.apps.wso2apim.hostnames.websub}}"
 
 
     [[apim.gateway.environment]]
@@ -206,7 +206,7 @@ data:
     #enable_token_hashing = false
     
     [apim.devportal]
-    url = "https://{{ .Values.integration.wso2apim.hostnames.default }}/devportal"
+    url = "https://{{ .Values.integration.apps.wso2apim.hostnames.default }}/devportal"
     #enable_application_sharing = false
     #if application_sharing_type, application_sharing_impl both defined priority goes to application_sharing_impl
     #application_sharing_type = "default" #changed type, saml, default #todo: check the new config for rest api

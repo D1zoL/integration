@@ -1,13 +1,13 @@
-{{ if .Values.integration.dependencies.postgresql }}
+{{ if .Values.integration.settings.dependencies.postgresql }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.integration.postgresql.serviceName }}
+  name: {{ .Values.integration.apps.postgresql.serviceName }}
   namespace : {{ .Release.Namespace }}
   labels:
     {{- include "postgresql.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.integration.postgresql.service.type }}
+  type: {{ .Values.integration.apps.postgresql.service.type }}
   selector:
     deployment: {{ template "postgresql.resource.prefix" . }}
   ports:

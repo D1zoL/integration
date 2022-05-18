@@ -1,13 +1,13 @@
-{{ if .Values.integration.dependencies.dashboard }}
+{{ if .Values.integration.settings.dependencies.dashboard }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.integration.dashboard.serviceName }}
+  name: {{ .Values.integration.apps.dashboard.serviceName }}
   namespace : {{ .Release.Namespace }}
   labels:
     {{- include "dashboard.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.integration.dashboard.service.type }}
+  type: {{ .Values.integration.apps.dashboard.service.type }}
   selector:
     deployment: {{ template "dashboard.resource.prefix" . }}
   ports:

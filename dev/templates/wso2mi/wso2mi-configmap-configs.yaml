@@ -1,4 +1,4 @@
-{{ if .Values.integration.dependencies.wso2mi }}
+{{ if .Values.integration.settings.dependencies.wso2mi }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,11 +7,11 @@ metadata:
 data:
   deployment.toml: |-
     [server]
-    hostname = "{{ .Values.integration.wso2mi.hostname }}"
+    hostname = "{{ .Values.integration.apps.wso2mi.hostname }}"
     hot_deployment = false
     # offset  = 10
 
-    {{ if not .Values.integration.dependencies.postgresql }}
+    {{ if not .Values.integration.settings.dependencies.postgresql }}
     [user_store]
     type = "read_only_ldap"
 
@@ -25,7 +25,7 @@ data:
     
     [[datasource]]
     id = "WSO2_USER_DB"
-    url= "jdbc:postgresql://{{ .Values.integration.postgresql.serviceName }}:5432/userdb"
+    url= "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/userdb"
     username="postgres"
     password="postgres"
     driver="org.postgresql.Driver"
@@ -38,7 +38,7 @@ data:
 
     [[datasource]]
     id = "WSO2_COORDINATION_DB"
-    url= "jdbc:postgresql://{{ .Values.integration.postgresql.serviceName }}:5432/clusterdb"
+    url= "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/clusterdb"
     username="postgres"
     password="postgres"
     driver="org.postgresql.Driver"
@@ -69,9 +69,9 @@ data:
     content_type = "text/html"
     class="org.wso2.carbon.relay.BinaryRelayBuilder"
 
-    {{ if .Values.integration.dependencies.dashboard}}
+    {{ if .Values.integration.settings.dependencies.dashboard}}
     [dashboard_config]
-    dashboard_url = "https://{{ .Values.integration.dashboard.serviceName }}:9743/dashboard/api/"
+    dashboard_url = "https://{{ .Values.integration.apps.dashboard.serviceName }}:9743/dashboard/api/"
     heartbeat_interval = 5
     group_id = "{{ .Chart.Name }}"
     #node_id = "oco-sandbox-node"
@@ -173,7 +173,7 @@ data:
     # password = "admin"
 
 
-  {{ if .Values.integration.dependencies.monitoring.enabled }}
+  {{ if .Values.integration.settings.dependencies.monitoring.enabled }}
   log4j2.properties: |-
     # the root category is ERROR (applies for all 3rd party JARs etc) and will be logged to the
     # LOG_APPENDER and the CONSOLE_APPENDER

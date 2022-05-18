@@ -2,112 +2,121 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 integration:
-  dependencies:
-    apim: true
-    postgresql: true
-    wso2mi: true
-    dashboard: true
-    monitoring:
+  settings: 
+    dependencies:
+      apim: true
+      postgresql: true
+      wso2mi: true
+      dashboard: true
+      monitoring:
+        enabled: true
+
+    serviceAccount:
       enabled: true
+      name: integration
+
+    ingress:
+      enabled: true
+      exposeApps:
+        wso2apim: true
+        postgresql: false
+        wso2mi: true
+        dashboard: true
       
-  serviceAccount:
-    enabled: true
-    name: integration
+  apps:  
+    wso2apim:
+      name: "wso2apim"
 
-  wso2apim:
-    name: "wso2apim"
+      hostnames:
+        default: wso2am-oco-sandbox.apps.prod.ibs.local
+        gateway: gateway.wso2am-oco-sandbox.apps.prod.ibs.local
+        websub: websub.wso2am-oco-sandbox.apps.prod.ibs.local
 
-    hostnames:
-      default: wso2am-oco-prod.apps.prod.ibs.local
-      gateway: gateway.wso2am-oco-prod.apps.prod.ibs.local
-      websub: websub.wso2am-oco-prod.apps.prod.ibs.local
+      proxy:
+        enabled: true
+        port: 443
 
-    proxy:
-      enabled: true
-      port: 443
+      replicaCount: 1
 
-    replicaCount: 1
+      image:
+        repository: wso2/wso2am
+        pullPolicy: IfNotPresent
+        tag: "4.1.0"
 
-    image:
-      repository: wso2/wso2am
-      pullPolicy: IfNotPresent
-      tag: "4.1.0"
+      imagePullSecrets: []
+      nameOverride: ""
+      podAnnotations: {}
+      podSecurityContext: 
+        runAsUser: 802
+      securityContext: {}
 
-    imagePullSecrets: []
-    nameOverride: ""
-    podAnnotations: {}
-    podSecurityContext: 
-      runAsUser: 802
-    securityContext: {}
+      service:
+        type: ClusterIP
 
-    service:
-      type: ClusterIP
+      resources:
+          requests:
+            memory: "2Gi"
+            cpu: "2000m"
+          limits:
+            memory: "3Gi"
+            cpu: "3000m"
+          jvm:
+            heap:
+              memory:
+                xms: "1024m"
+                xmx: "1024m"
 
-    resources:
-        requests:
-          memory: "2Gi"
-          cpu: "2000m"
-        limits:
-          memory: "3Gi"
-          cpu: "3000m"
-        jvm:
-          heap:
-            memory:
-              xms: "1024m"
-              xmx: "1024m"
+      autoscaling:
+        enabled: false
+        minReplicas: {}
+        maxReplicas: {}
+        targetCPUUtilizationPercentage: {}
+        targetMemoryUtilizationPercentage: {}
 
-    autoscaling:
-      enabled: false
-      minReplicas: {}
-      maxReplicas: {}
-      targetCPUUtilizationPercentage: {}
-      targetMemoryUtilizationPercentage: {}
+      nodeSelector: {}
 
-    nodeSelector: {}
-
-  postgresql:
-    name: "postgresql"
-    serviceName: "postgresql-service"
-    service:
-      type: NodePort
-    image:
-      repository: postgres
-      pullPolicy: IfNotPresent
-      tag: "14.2"
-    volume:
-      enabled: true
-      capacity: 20Gi
-      storageClassName: nfs-client
-    podAnnotations: {}
-  
-  wso2mi:
-    name: "wso2mi"
-    hostname: wso2mi-oco-prod.apps.prod.ibs.local
-    serviceName: "wso2mi-service"
-    cluster:
-      enabled: false
-      replicas: 2
-    replicas: 1
-    service:
-      type: LoadBalancer
-    image:
-      repository: d1zol/oco
-      pullPolicy: Always
-      tag: "latest"
-    podAnnotations: {}
-    podSecurityContext: 
-      runAsUser: 802
-  
-  dashboard:
-    name: "dashboard"
-    hostname:
-    serviceName: "dashboard-service"
-    service:
-      type: ClusterIP
-    image:
-      repository: wso2/wso2mi-dashboard
-      pullPolicy: IfNotPresent
-      tag: "4.1.0"
-    podAnnotations: {}
-    podSecurityContext: 
-      runAsUser: 802
+    postgresql:
+      name: "postgresql"
+      serviceName: "postgresql-service"
+      service:
+        type: NodePort
+      image:
+        repository: postgres
+        pullPolicy: IfNotPresent
+        tag: "14.2"
+      volume:
+        enabled: true
+        capacity: 20Gi
+        storageClassName: nfs-client
+      podAnnotations: {}
+    
+    wso2mi:
+      name: "wso2mi"
+      hostname: wso2mi-oco-sandbox.apps.prod.ibs.local
+      serviceName: "wso2mi-service"
+      replicas: 1
+      services:
+        main:
+          type: LoadBalancer
+        type: ClusterIP
+      image:
+        repository: d1zol/oco
+        pullPolicy: Always
+        tag: "latest"
+      podAnnotations: {}
+      podSecurityContext: 
+        runAsUser: 802
+    
+    dashboard:
+      name: "dashboard"
+      hostname:
+      serviceName: "dashboard-service"
+      service:
+        type: ClusterIP
+      image:
+        repository: wso2/wso2mi-dashboard
+        pullPolicy: IfNotPresent
+        tag: "4.1.0"
+      podAnnotations: {}
+      podSecurityContext: 
+        runAsUser: 802

@@ -1,8 +1,8 @@
-{{ if .Values.integration.dependencies.dashboard }}
+{{ if .Values.integration.settings.dependencies.dashboard }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.integration.dashboard.name}}
+  name: {{ .Values.integration.apps.dashboard.name}}
   namespace : {{ .Release.Namespace }}
   labels:
     {{- include "dashboard.labels" . | nindent 4 }}
@@ -13,7 +13,7 @@ spec:
       deployment: {{ template "dashboard.resource.prefix" . }}
   template:
     metadata:
-      {{- with .Values.integration.dashboard.podAnnotations }}
+      {{- with .Values.integration.apps.dashboard.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -21,15 +21,15 @@ spec:
         deployment: {{ template "dashboard.resource.prefix" . }}
     spec:
       containers:
-        - name: {{ .Values.integration.dashboard.name}}
-          image: "{{ .Values.integration.dashboard.image.repository }}:{{ .Values.integration.dashboard.image.tag }}"
-          imagePullPolicy: {{ .Values.integration.dashboard.image.pullPolicy }}
+        - name: {{ .Values.integration.apps.dashboard.name}}
+          image: "{{ .Values.integration.apps.dashboard.image.repository }}:{{ .Values.integration.apps.dashboard.image.tag }}"
+          imagePullPolicy: {{ .Values.integration.apps.dashboard.image.pullPolicy }}
           ports:
             - containerPort: 9743
               protocol: "TCP"    
-      {{ if .Values.integration.serviceAccount.enabled }}
-      serviceAccountName: {{ .Values.integration.serviceAccount.name }}
+      {{ if .Values.integration.settings.serviceAccount.enabled }}
+      serviceAccountName: {{ .Values.integration.settings.serviceAccount.name }}
       {{ end }}
       securityContext:
-        {{- toYaml .Values.integration.wso2mi.podSecurityContext | nindent 8 }}  
+        {{- toYaml .Values.integration.apps.wso2mi.podSecurityContext | nindent 8 }}  
 {{ end }}

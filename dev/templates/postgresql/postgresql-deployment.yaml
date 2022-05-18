@@ -1,8 +1,8 @@
-{{ if .Values.integration.dependencies.postgresql }}
+{{ if .Values.integration.settings.dependencies.postgresql }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.integration.postgresql.name }}
+  name: {{ .Values.integration.apps.postgresql.name }}
   namespace : {{ .Release.Namespace }}
   labels:
     {{- include "postgresql.labels" . | nindent 4 }}
@@ -13,7 +13,7 @@ spec:
       deployment: {{ template "postgresql.resource.prefix" . }}
   template:
     metadata:
-      {{- with .Values.integration.postgresql.podAnnotations }}
+      {{- with .Values.integration.apps.postgresql.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -21,26 +21,26 @@ spec:
         deployment: {{ template "postgresql.resource.prefix" . }}
     spec:
       containers:
-        - name: {{ .Values.integration.postgresql.name }}
-          image: "{{ .Values.integration.postgresql.image.repository }}:{{ .Values.integration.postgresql.image.tag }}"
-          imagePullPolicy: {{ .Values.integration.postgresql.image.pullPolicy }}
+        - name: {{ .Values.integration.apps.postgresql.name }}
+          image: "{{ .Values.integration.apps.postgresql.image.repository }}:{{ .Values.integration.apps.postgresql.image.tag }}"
+          imagePullPolicy: {{ .Values.integration.apps.postgresql.image.pullPolicy }}
           ports:
             - containerPort: 5432
           env:
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.integration.postgresql.name }}-secrets
+                  name: {{ .Values.integration.apps.postgresql.name }}-secrets
                   key: POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.integration.postgresql.name }}-secrets
+                  name: {{ .Values.integration.apps.postgresql.name }}-secrets
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.integration.postgresql.name }}-secrets
+                  name: {{ .Values.integration.apps.postgresql.name }}-secrets
                   key: POSTGRES_PASSWORD
           volumeMounts:
             - name: postgresql-init-scripts
@@ -55,7 +55,7 @@ spec:
         - name: postgresql-data
           persistentVolumeClaim:
             claimName: {{ template "postgresql.resource.prefix" . }}-data-volume
-      {{ if .Values.integration.serviceAccount.enabled }}
-      serviceAccountName: {{ .Values.integration.serviceAccount.name }}
+      {{ if .Values.integration.settings.serviceAccount.enabled }}
+      serviceAccountName: {{ .Values.integration.settings.serviceAccount.name }}
       {{ end }}
 {{ end }}

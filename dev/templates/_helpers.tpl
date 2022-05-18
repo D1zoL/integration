@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "integration.name" -}}
-{{- default .Chart.Name .Values.integration.wso2apim.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default .Chart.Name .Values.integration.apps.wso2apim.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -16,10 +16,10 @@ Create chart name and version as used by the chart label.
 Create the name of the service account to use
 */}}
 {{- define "integration.serviceAccountName" -}}
-{{- if .Values.integration.serviceAccount.enabled }}
-{{- default (printf "%s-service" (include "integration.name" .)) .Values.integration.serviceAccount.name }}
+{{- if .Values.integration.settings.serviceAccount.enabled }}
+{{- default (printf "%s-service" (include "integration.name" .)) .Values.integration.settings.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.integration.serviceAccount.name }}
+{{- default "default" .Values.integration.settings.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
@@ -35,7 +35,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "wso2apim.fullname" -}}
-{{- default .Chart.Name .Values.integration.wso2apim.name }}
+{{- default .Chart.Name .Values.integration.apps.wso2apim.name }}
 {{- end -}}
 
 {{/*
@@ -75,7 +75,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 */}}
 
 {{- define "postgresql.fullname" -}}
-{{- default .Chart.Name .Values.integration.postgresql.name }}
+{{- default .Chart.Name .Values.integration.apps.postgresql.name }}
 {{- end -}}
 
 {{/*
@@ -113,7 +113,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 */}}
 
 {{- define "wso2mi.fullname" -}}
-{{- default .Chart.Name .Values.integration.wso2mi.name }}
+{{- default .Chart.Name .Values.integration.apps.wso2mi.name }}
 {{- end -}}
 
 {{/*
@@ -152,7 +152,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 */}}
 
 {{- define "dashboard.fullname" -}}
-{{- default .Chart.Name .Values.integration.dashboard.name }}
+{{- default .Chart.Name .Values.integration.apps.dashboard.name }}
 {{- end -}}
 
 {{/*

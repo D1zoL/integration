@@ -1,13 +1,13 @@
-{{ if .Values.integration.dependencies.wso2mi }}
+{{ if .Values.integration.settings.dependencies.wso2mi }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.integration.wso2mi.serviceName }}-1
+  name: {{ .Values.integration.apps.wso2mi.serviceName }}-1
   namespace : {{ .Release.Namespace }}
   labels:
     {{- include "wso2mi.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.integration.wso2mi.services.type }}
+  type: {{ .Values.integration.apps.wso2mi.services.type }}
   selector:
     deployment: {{ template "wso2mi.resource.prefix" . }}
     node: {{ template "wso2mi.resource.prefix" . }}-1

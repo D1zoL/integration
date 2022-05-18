@@ -1,4 +1,4 @@
-{{ if .Values.integration.dependencies.apim }}
+{{ if .Values.integration.settings.dependencies.apim }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "wso2apim.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.integration.wso2apim.service.type }}
+  type: {{ .Values.integration.apps.wso2apim.service.type }}
   selector:
     deployment: {{ template "wso2apim.resource.prefix" . }}
   ports:

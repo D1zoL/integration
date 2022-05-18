@@ -1,4 +1,4 @@
-{{ if .Values.integration.dependencies.postgresql }}
+{{ if .Values.integration.settings.dependencies.postgresql }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -9,7 +9,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: {{ .Values.integration.postgresql.volume.capacity }}
-  storageClassName: {{ .Values.integration.postgresql.volume.storageClassName }}
+      storage: {{ .Values.integration.apps.postgresql.volume.capacity }}
+  storageClassName: {{ .Values.integration.apps.postgresql.volume.storageClassName }}
 
 {{ end }}

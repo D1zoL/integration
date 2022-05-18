@@ -1,4 +1,4 @@
-{{ if .Values.integration.dependencies.wso2mi }}
+{{ if .Values.integration.settings.dependencies.wso2mi }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

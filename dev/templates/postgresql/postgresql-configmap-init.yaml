@@ -1,4 +1,4 @@
-{{ if .Values.integration.dependencies.postgresql }}
+{{ if .Values.integration.settings.dependencies.postgresql }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

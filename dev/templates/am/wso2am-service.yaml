@@ -9,7 +9,7 @@ metadata:
 spec:
   type: {{ .Values.integration.apps.wso2apim.service.type }}
   selector:
-    {{- include "wso2apim.selectorLabels" . | nindent 6 }}
+    deployment: {{ template "wso2apim.resource.prefix" . }}
   ports:
     # ports that this service should serve on
     - name: port-11111

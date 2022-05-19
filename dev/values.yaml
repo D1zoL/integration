@@ -16,7 +16,7 @@ integration:
       name: integration
 
     ingress:
-      enabled: true
+      enabled: false
       exposeApps:
         wso2apim: true
         postgresql: false

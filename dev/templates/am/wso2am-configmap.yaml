@@ -47,7 +47,7 @@ data:
 
     [database.local]
     type = "postgresql"
-    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2CARBON_DB"
+    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/WSO2CARBON_DB"
     username = "postgres"
     password = "postgres"
     driver = "org.postgresql.Driver"
@@ -58,7 +58,7 @@ data:
 
     [database.apim_db]
     type = "postgresql"
-    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2AM_DB"
+    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/WSO2AM_DB"
     username = "postgres"
     password = "postgres"
     driver = "org.postgresql.Driver"
@@ -68,7 +68,7 @@ data:
 
     [database.shared_db]
     type = "postgresql"
-    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}.{{ .Release.Namespace }}.svc.cluster.local:5432/WSO2SHARED_DB"
+    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/WSO2SHARED_DB"
     username = "postgres"
     password = "postgres"
     driver = "org.postgresql.Driver"

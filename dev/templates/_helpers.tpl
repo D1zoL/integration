@@ -39,10 +39,10 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-WSO2AM NAME
+wso2apim NAME
 */}}
 {{- define "wso2apim.resource.prefix" -}}
-{{- "wso2am" }}
+{{- "wso2apim" }}
 {{- end -}}
 
 {{/*

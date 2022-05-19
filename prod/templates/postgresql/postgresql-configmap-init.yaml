@@ -7,7 +7,7 @@ metadata:
 data:
   init-max-connection.sql: |-
     ALTER SYSTEM SET max_connections = 500;
-  init-wso2am-db.sh: |-
+  init-wso2apim-db.sh: |-
     #!/bin/bash
     set -e
 
@@ -23,7 +23,7 @@ data:
         CREATE DATABASE "clusterdb";
         GRANT ALL PRIVILEGES ON DATABASE "clusterdb" TO $POSTGRES_USER;
     EOSQL
-  init-wso2am-tables.sql: |-
+  init-wso2apim-tables.sql: |-
     \c WSO2AM_DB;
     BEGIN TRANSACTION;
 

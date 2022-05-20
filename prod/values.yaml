@@ -43,6 +43,13 @@ integration:
         pullPolicy: IfNotPresent
         tag: "4.1.0"
 
+      livenessProbe:
+        initialDelaySeconds: 180
+        periodSeconds: 10
+      readinessProbe:
+        initialDelaySeconds: 180
+        periodSeconds: 10
+
       imagePullSecrets: []
       nameOverride: ""
       podAnnotations: {}

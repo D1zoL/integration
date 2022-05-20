@@ -16,7 +16,7 @@ integration:
       name: integration
 
     ingress:
-      enabled: false
+      enabled: true
       exposeApps:
         wso2apim: true
         postgresql: false
@@ -43,6 +43,13 @@ integration:
         pullPolicy: IfNotPresent
         tag: "4.1.0"
 
+      livenessProbe:
+        initialDelaySeconds: 180
+        periodSeconds: 10
+      readinessProbe:
+        initialDelaySeconds: 180
+        periodSeconds: 10
+
       imagePullSecrets: []
       nameOverride: ""
       podAnnotations: {}
@@ -50,7 +57,12 @@ integration:
         runAsUser: 802
       securityContext: {}
 
-      service:
+      #service:
+      #  type: ClusterIP
+
+      services:
+        main:
+          type: LoadBalancer
         type: ClusterIP
 
       resources:
@@ -63,8 +75,8 @@ integration:
           jvm:
             heap:
               memory:
-                xms: "1024m"
-                xmx: "1024m"
+                xms: "4096m"
+                xmx: "4096m"
 
       autoscaling:
         enabled: false

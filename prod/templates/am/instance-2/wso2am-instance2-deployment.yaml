@@ -47,6 +47,18 @@ spec:
           imagePullPolicy: {{ .Values.integration.apps.wso2apim.image.pullPolicy }}
           securityContext:
             {{- toYaml .Values.integration.apps.wso2apim.podSecurityContext | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /services/Version
+              port: 9763
+            initialDelaySeconds: {{ .Values.integration.apps.wso2apim.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.integration.apps.wso2apim.livenessProbe.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: /services/Version
+              port: 9763
+            initialDelaySeconds: {{ .Values.integration.apps.wso2apim.readinessProbe.initialDelaySeconds}}
+            periodSeconds: {{ .Values.integration.apps.wso2apim.readinessProbe.periodSeconds }}
           ports:
             - containerPort: 11111
               protocol: TCP

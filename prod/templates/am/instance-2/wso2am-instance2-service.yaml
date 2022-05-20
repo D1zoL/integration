@@ -10,7 +10,7 @@ spec:
   type: {{ .Values.integration.apps.wso2apim.services.type }}
   selector:
     deployment: {{ template "wso2apim.resource.prefix" . }}
-    node: {{ template "wso2mi.resource.prefix" . }}-instance2
+    node: {{ template "wso2apim.resource.prefix" . }}-instance2
   ports:
     # ports that this service should serve on
     - name: port-11111

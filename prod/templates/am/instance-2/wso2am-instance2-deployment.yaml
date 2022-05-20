@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "wso2apim.fullname" . }}
+  name: {{ include "wso2apim.fullname" . }}-instance2
   labels:
     {{- include "wso2apim.labels" . | nindent 4 }}
 spec:  
@@ -12,6 +12,7 @@ spec:
   selector:
     matchLabels:
       deployment: {{ template "wso2apim.resource.prefix" . }}
+      node: {{ template "wso2apim.resource.prefix" . }}-instance2
   template:
     metadata:
       {{- with .Values.integration.apps.wso2apim.podAnnotations }}
@@ -20,6 +21,7 @@ spec:
       {{- end }}
       labels:
         deployment: {{ template "wso2apim.resource.prefix" . }}
+        node: {{ template "wso2apim.resource.prefix" . }}-instance2
     spec:
       {{ if .Values.integration.settings.dependencies.postgresql }}
       initContainers:
@@ -83,7 +85,7 @@ spec:
       volumes:
         - name: wso2apim-deployment-toml
           configMap:
-            name: {{ template "wso2apim.resource.prefix" . }}-conf
+            name: {{ template "wso2apim.resource.prefix" . }}-instance2-conf
         {{ if .Values.integration.settings.dependencies.postgresql }}
         - name: postgresql-connector-jar
           emptyDir: {}

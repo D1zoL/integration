@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "wso2apim.resource.prefix" . }}-conf
+  name: {{ template "wso2apim.resource.prefix" . }}-instance1-conf
   namespace : {{ .Release.Namespace }}
 data:
   deployment.toml: |-
@@ -47,7 +47,7 @@ data:
 
     [database.local]
     type = "postgresql"
-    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/WSO2CARBON_DB"
+    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/WSO2CARBON_DB_INSTANCE1"
     username = "postgres"
     password = "postgres"
     driver = "org.postgresql.Driver"
@@ -58,7 +58,7 @@ data:
 
     [database.apim_db]
     type = "postgresql"
-    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/WSO2AM_DB"
+    url = "jdbc:postgresql://{{ .Values.integration.apps.postgresql.serviceName }}:5432/WSO2APIM_DB"
     username = "postgres"
     password = "postgres"
     driver = "org.postgresql.Driver"
@@ -226,7 +226,8 @@ data:
     allow_headers = ["authorization","Access-Control-Allow-Origin","Content-Type","SOAPAction","apikey","Internal-Key"]
     allow_credentials = false
     
-    #[apim.throttling]
+    [apim.throttling]
+    event_duplicate_url = ["tcp://{{ include "wso2apim.fullname" . }}-instance2-service:5672"]
     #enable_data_publishing = true
     #enable_policy_deploy = true
     #enable_blacklist_condition = true
@@ -248,15 +249,15 @@ data:
     #hostName = "0.0.0.0"
     #port = 10005
     
-    #[[apim.throttling.url_group]]
-    #traffic_manager_urls = ["tcp://localhost:9611","tcp://localhost:9611"]
-    #traffic_manager_auth_urls = ["ssl://localhost:9711","ssl://localhost:9711"]
-    #type = "loadbalance"
-    
-    #[[apim.throttling.url_group]]
-    #traffic_manager_urls = ["tcp://localhost:9611","tcp://localhost:9611"]
-    #traffic_manager_auth_urls = ["ssl://localhost:9711","ssl://localhost:9711"]
-    #type = "failover"
+    [[apim.throttling.url_group]]
+    traffic_manager_urls = ["tcp://{{ include "wso2apim.fullname" . }}-instance1-service:9611"]
+    traffic_manager_auth_urls = ["ssl://{{ include "wso2apim.fullname" . }}-instance1-service:9711"]
+    type = "loadbalance"
+
+    [[apim.throttling.url_group]]
+    traffic_manager_urls = ["tcp://{{ include "wso2apim.fullname" . }}-instance2-service:9611"]
+    traffic_manager_auth_urls = ["ssl://{{ include "wso2apim.fullname" . }}-instance2-service:9711"]
+    type = "loadbalance"
     
     #[apim.workflow]
     #enable = false
@@ -325,4 +326,7 @@ data:
     enable = true
     allow_refresh_tokens = true
     iat_validity_period = "1h"  
+
+    [transport.passthru_https.sender.parameters]
+    HostnameVerifier = "AllowAll"
 {{ end }}

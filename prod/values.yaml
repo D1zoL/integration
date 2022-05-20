@@ -50,7 +50,12 @@ integration:
         runAsUser: 802
       securityContext: {}
 
-      service:
+      #service:
+      #  type: ClusterIP
+
+      services:
+        main:
+          type: LoadBalancer
         type: ClusterIP
 
       resources:

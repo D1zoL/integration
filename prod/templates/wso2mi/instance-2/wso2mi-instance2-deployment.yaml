@@ -60,6 +60,8 @@ spec:
             {{ if .Values.integration.settings.dependencies.monitoring.enabled }}
             - name: JAVA_OPTS
               value: -DenablePrometheusApi=true            
+            - name: NODE_PARAMS
+              value: -Dproperties.file.path=/home/wso2carbon/wso2mi-4.1.0/conf/properties/prod.properties
             - name: instance
               value: "{{ .Values.integration.apps.wso2mi.serviceName}}-2.{{ .Release.Namespace }}.svc.cluster.local:9201"
             {{ end }}       
@@ -92,7 +94,7 @@ spec:
       securityContext:
         {{- toYaml .Values.integration.apps.wso2mi.podSecurityContext | nindent 8 }}
       hostAliases:
-        - ip: 172.28.213.133
+        - ip: 172.28.213.134
           hostnames:
-            - 1czt
+            - 1cz
 {{ end }}

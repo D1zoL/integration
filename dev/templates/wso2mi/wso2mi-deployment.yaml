@@ -59,7 +59,9 @@ spec:
           env:
             {{ if .Values.integration.settings.dependencies.monitoring.enabled }}
             - name: JAVA_OPTS
-              value: -DenablePrometheusApi=true            
+              value: -DenablePrometheusApi=true    
+            - name: NODE_PARAMS
+              value: -Dproperties.file.path=/home/wso2carbon/wso2mi-4.1.0/conf/properties/dev.properties        
             - name: instance
               value: "{{ .Values.integration.apps.wso2mi.serviceName}}.{{ .Release.Namespace }}.svc.cluster.local:9201"
             {{ end }}       

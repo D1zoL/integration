@@ -42,7 +42,7 @@ spec:
             mountPath: /postgresql-connector-jar
       - name: sleep
         image: busybox:1.32
-        command: ['sh', '-c', 'sleep 20; printf "-"; done;']   
+        command: ['sh', '-c', 'sleep 20;']   
       {{ end }}   
       containers:
         - name: {{ .Values.integration.apps.wso2apim.name }}

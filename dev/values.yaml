@@ -103,6 +103,7 @@ integration:
       podAnnotations: {}
     
     wso2mi:
+      customDeployment: true
       name: "wso2mi"
       hostname: wso2mi-oco-sandbox.apps.prod.ibs.local
       serviceName: "wso2mi-service"

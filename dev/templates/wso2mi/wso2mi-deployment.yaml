@@ -66,8 +66,10 @@ spec:
               value: "{{ .Values.integration.apps.wso2mi.serviceName}}.{{ .Release.Namespace }}.svc.cluster.local:9201"
             {{ end }}       
           volumeMounts:
+            {{ if .Values.integration.apps.wso2mi.customDeployment }}
             - name: wso2mi-config
               mountPath: /home/wso2carbon/wso2-config-volume/conf
+            {{ end }}
             {{ if .Values.integration.settings.dependencies.postgresql }}
             - name: postgresql-connector-jar
               mountPath: /home/wso2carbon/wso2-artifact-volume/lib
@@ -76,10 +78,12 @@ spec:
               mountPath: /home/wso2carbon/docker-entrypoint.sh
               subPath: docker-entrypoint.sh
       volumes:
+        {{ if .Values.integration.apps.wso2mi.customDeployment }}
         - name: wso2mi-config
           configMap:
             name: {{ template "wso2mi.resource.prefix" . }}-conf
             defaultMode: 420
+        {{ end }}
         {{ if .Values.integration.settings.dependencies.postgresql }}
         - name: postgresql-connector-jar
           emptyDir: {}

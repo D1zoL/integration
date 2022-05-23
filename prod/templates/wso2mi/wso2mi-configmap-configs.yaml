@@ -1,4 +1,6 @@
 {{ if .Values.integration.settings.dependencies.wso2mi }}
+{{ if .Values.integration.apps.wso2mi.customDeployment }}
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -80,6 +82,17 @@ data:
     [[synapse_handlers]]
     name="CustomObservabilityHandler"
     class="org.wso2.micro.integrator.observability.metric.handler.MetricHandler"
+
+    [[transport.mail.sender]]
+    name = "mailto"
+    parameter.hostname = "mail.ibs.ru"
+    parameter.port = "587"
+    parameter.enable_tls = true
+    parameter.auth = true
+
+    [secrets]
+    mail_secret_key = "ngVqI1xudRvcJc26o7kjbUOgicQq+8IyWI+qRkWbku0kAVov7GppBJWzkVb23CSCiAU62VvSqE/pfIe8Ef5T6eWxiIo0rcx6N6bX2j6Gwmsbl2HZUUaSuRY/2RxsRRIEyUpW5o2qSgm1Z2cwB7rwsrmRy49K2G9HkGYpXFZHFcuvhhJVdwq/edo+MdtuH8SbNA758+orgrOU/JpBsMaLhGLA6SmT0xFtdk6+P7aFyRlZM9x+U4xIZcSRZMnYTpNkTT3H7UHmOTjk7bPM9nTusr7xWF2QKOS4cT/0kw29pqptzDNppIf8zsjR0/SxMB7YBIdJ2tjvZ9bjpYeQWTEj3A=="
+
 
     ## Following are set of example configs. Please refer docs for complete set of configurations.
 
@@ -650,4 +663,5 @@ data:
     appender.osgi.filter = *
     rootLogger.appenderRef.osgi.ref=PaxOsgi
   {{ end }}
+{{ end }}
 {{ end }}

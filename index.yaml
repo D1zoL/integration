@@ -3,9 +3,9 @@ entries:
   integration-dev:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-20T13:51:13.8588708+03:00"
+    created: "2022-05-23T13:55:01.8769702+03:00"
     description: A Helm chart for Kubernetes
-    digest: c3cd205355c7f571c90f6d72068af48b7c9fe3eb28f37cd2ab9d48fa529686b4
+    digest: 621844e0c45bb99228675a328cb7d4f26f645c8cd2b29e68c1c9b481c6302029
     name: integration-dev
     type: application
     urls:
@@ -14,12 +14,12 @@ entries:
   integration-prod:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-20T13:51:13.8622225+03:00"
+    created: "2022-05-23T13:55:01.8820012+03:00"
     description: A Helm chart for Kubernetes
-    digest: f89c45aba31de17b2a8198ab22562b309ca39416eab9ffd1cd06d1c413fcd94e
+    digest: 2e30827d8e8dc2672820d79bc74801b0508cd3f23c8a549da243398aba7bbf1f
     name: integration-prod
     type: application
     urls:
     - https://d1zol.github.io/integration/prod/integration-prod-1.0.0.tgz
     version: 1.0.0
-generated: "2022-05-20T13:51:13.8549733+03:00"
+generated: "2022-05-23T13:55:01.8677818+03:00"

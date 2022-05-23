@@ -44,10 +44,10 @@ integration:
         tag: "4.1.0"
 
       livenessProbe:
-        initialDelaySeconds: 180
+        initialDelaySeconds: 60
         periodSeconds: 10
       readinessProbe:
-        initialDelaySeconds: 180
+        initialDelaySeconds: 60
         periodSeconds: 10
 
       imagePullSecrets: []
